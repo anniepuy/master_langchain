@@ -1,3 +1,9 @@
+"""
+Title: LangChain Chaining Runnables
+Purpose: Learn how to take two chains in sequence but also run a third as parallel to the first two chains
+Author: Ann Hagan - via learning through Laxmi Kant on Udemy
+"""
+
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import (

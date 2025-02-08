@@ -1,6 +1,6 @@
 """
-Title: LangChain Output Parsing
-Purpose: Learn how to structure the LLM output through using the output parsers.Pydantic is used to validate the data.
+Title: LangChain JSON Output Parser
+Purpose: Learn how to structure the LLM output through using the output parsers.
 Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 """
 
@@ -9,7 +9,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import (
     PromptTemplate
 )
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers import JsonOutputParser
 
 load_dotenv()
 
@@ -24,8 +24,7 @@ llm = ChatOllama(
     temperature = 0.8,
     num_predict = 256,
 )
-#1. How to create a Pydantic Output Parser to give LLM instructions on how to output the text
-#import all the necessary pydantic classes - BaseModel is always used
+
 from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import PydanticOutputParser
@@ -42,42 +41,21 @@ class Joke(BaseModel):
         punchline: str = Field(description="The punchline of the joke.")
         rating: Optional[int] = Field(description="The rating of the joke is from 1 to 10.", default=None)
 
-parser = PydanticOutputParser(pydantic_object=Joke)
+parser = JsonOutputParser(pydantic_object=Joke)
+print(parser.get_format_instructions())
 
-#this becomes the instructions to pass to the LLM for output schema
-instruction = parser.get_format_instructions()
-
-#Verify
-print(instruction)
-
-#2. Use the Pydantic Parser with Prompt Template
-#Paritial variables are the instructions for llm
-#query comes from the chain
 prompt = PromptTemplate(
         template = '''
         Answer the user query with a joke. Here is your formatting instruction.
         {format_instruction}
-
         Query: {query}
-        Answer: 
-        ''',
-        input_variables = ['query'],
-        partial_variables = {'format_instruction': parser.get_format_instructions()}
+        Answer: ''',
+        input_variables=['query'],
+        partial_variables={'format_instruction': parser.get_format_instructions()}
 )
 
-#View the prompt
-#print(prompt)
+chain = prompt | llm | parser
 
-#This prompt will be used to prepare the chain
-
-chain = prompt | llm 
-
-output = chain.invoke({'query': 'Tell me a joke about penquins.'})
-print(output.content)
-
-#3. Use structured output parsing 
-#The difference is ideal is Pydantic. Try not to use structured output parsing unless you have to.
-structured_llm = llm.with_structured_output(Joke)
-
-output2 = structured_llm.invoke('Tell me a joke about dogs.')
-print(output2)
+output = chain.invoke({'query': 'Tell me a joke'})
+print("\n\n")
+print(output)

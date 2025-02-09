@@ -10,7 +10,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ( 
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,   
-    ChatMessagePromptTemplate,
+    ChatPromptTemplate,
     MessagesPlaceholder
 )
 from langchain_core.output_parsers import StrOutputParser
@@ -48,7 +48,7 @@ human = HumanMessagePromptTemplate.from_template("{input}")
 
 messages = [system, MessagesPlaceholder(variable_name='history'), human]
 
-prompt = ChatMessagePromptTemplate(messages= messages)
+prompt = ChatPromptTemplate(messages= messages)
 
 chain = prompt | llm | StrOutputParser()
 

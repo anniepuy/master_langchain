@@ -1,6 +1,6 @@
 """
 Title: Creating own chatbot using StreamLit and Ollama
-Purpose: Basic Chatbot with StreamLit with history enabled
+Purpose: Basic Chatbot with StreamLit with history enabled through session state only. Not persistent.
 Note: Replaced ChatMessagePromptTemplate with ChatPromptTemplate
 	•	ChatMessagePromptTemplate is meant for individual messages.
 	•	ChatPromptTemplate.from_messages(messages) is needed when handling multiple messages.
@@ -40,6 +40,18 @@ llm = ChatOllama(
 
 def get_session_history(session_id):
     return SQLChatMessageHistory(session_id, "sqlite:///chat_memory.db")
+
+#Create chat history in streamlist session state
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+#Button for user history
+if st.button("Start new conversation"):
+    #Clear the chat history of streamlist
+    st.session_state.chat_history = []
+    history = get_session_history(user_id)
+    #clear history of mysql db
+    history.clear()
 
 #Base LLM SetUp
 system = SystemMessagePromptTemplate.from_template("You are a helpful assistant.")

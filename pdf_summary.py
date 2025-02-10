@@ -1,14 +1,20 @@
 """
-Title: PDF Parsing with PyMuPDF
-Purpose: Parsing with PyMU PDF
+Title: PDF Summary
+Purpose: Make a different prompt for summarization outside of Q&A
 Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 """
 
+##Question Answering using LLM
 from dotenv import load_dotenv
-load_dotenv()
 
 from langchain_ollama import ChatOllama
+from langchain_core.prompts import (
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+    ChatPromptTemplate
+)
 from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_core.output_parsers import StrOutputParser
 import os
 import tiktoken
 
@@ -22,23 +28,9 @@ model = 'llama3.2'
 llm = ChatOllama(
     base_url=base_url,
     model = model,
-    temperature = 0.8,
+    temperature = 1,
     num_predict = 256,
 )
-
-#load a single document
-#loader = PyMuPDFLoader("./rag_documents_health/SuddenCardiacDeathofAthletesandPre-ParticipationScreeningTheYouthLeagueCoachPerspective.pdf")
-
-#docs = loader.load()
-
-#print(len(docs))
-
-#metadata of the document
-#print(docs[0].metadata)
-
-#prints first page of the document
-#print(docs[0].page_content)
-
 #load all documents from a directory one by one
 #read the list of PDFs in the directory, iterate over the files. Works with nested folder structure as well
 pdfs = []
@@ -66,15 +58,27 @@ context = format_text(docs)
 #To find how many tokens are in the document - use tiktoken
 encoding = tiktoken.encoding_for_model("gpt-4o-mini")
 
-#example - apply the encodings to the text
-print(encoding.encode("Hello, World!"))
+#Prepare system prompt and prompt template for QA
+system = SystemMessagePromptTemplate.from_template("""
+                            You are a helpful AI assistant who works as a document summarizer.
+                            You must not hallucinate or provide any false information.
+                            """)    
 
-#how many tokens in the first doc
-print(len(encoding.encode(docs[0].page_content)))
+prompt = """ Summarize the given context in {words}.
+        ### Context: 
+        {context}
+        
+        ### Summary:"""
 
-#how many tokens in our context
-print(len(encoding.encode(context)))
+prompt = HumanMessagePromptTemplate.from_template(prompt)
 
-### Your text tokens must be less than the model! 
+messages = [system, prompt]
+template = ChatPromptTemplate(messages)
 
+print(template)
 
+summary_chain = template | llm | StrOutputParser()
+
+response = summary_chain.invoke({'context': context, 'words': 50})
+
+print(response)

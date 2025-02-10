@@ -1,14 +1,20 @@
 """
-Title: PDF Parsing with PyMuPDF
-Purpose: Parsing with PyMU PDF
+Title: RAG Q&A
+Purpose: RAG Q&A using our PDF Parser - no tokenization of the RAG documents. 
 Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 """
 
+##Question Answering using LLM
 from dotenv import load_dotenv
-load_dotenv()
 
 from langchain_ollama import ChatOllama
+from langchain_core.prompts import (
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+    ChatPromptTemplate
+)
 from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_core.output_parsers import StrOutputParser
 import os
 import tiktoken
 
@@ -25,20 +31,6 @@ llm = ChatOllama(
     temperature = 0.8,
     num_predict = 256,
 )
-
-#load a single document
-#loader = PyMuPDFLoader("./rag_documents_health/SuddenCardiacDeathofAthletesandPre-ParticipationScreeningTheYouthLeagueCoachPerspective.pdf")
-
-#docs = loader.load()
-
-#print(len(docs))
-
-#metadata of the document
-#print(docs[0].metadata)
-
-#prints first page of the document
-#print(docs[0].page_content)
-
 #load all documents from a directory one by one
 #read the list of PDFs in the directory, iterate over the files. Works with nested folder structure as well
 pdfs = []
@@ -66,15 +58,31 @@ context = format_text(docs)
 #To find how many tokens are in the document - use tiktoken
 encoding = tiktoken.encoding_for_model("gpt-4o-mini")
 
-#example - apply the encodings to the text
-print(encoding.encode("Hello, World!"))
+#Prepare system prompt and prompt template for QA
+system = SystemMessagePromptTemplate.from_template("""
+                            You are a helpful AI assistant who answers user question based on provided content.
+                            Do not answer in more than {words} words.
+                            """)    
 
-#how many tokens in the first doc
-print(len(encoding.encode(docs[0].page_content)))
+prompt = """ Answer user question based on the provided context only.  If you do not know the answer, just say "I don't know".
+        ### Context: 
+        {context}
 
-#how many tokens in our context
-print(len(encoding.encode(context)))
+        ### Question: 
+        {question}
 
-### Your text tokens must be less than the model! 
+        ### Answer:"""
 
+prompt = HumanMessagePromptTemplate.from_template(prompt)
 
+messages = [system, prompt]
+template = ChatPromptTemplate(messages)
+
+print(template)
+template.invoke({'context': context, 'question': 'How to gain muscle mass?', 'words': 50})
+
+qna_chain = template | llm | StrOutputParser()
+
+response = qna_chain.invoke({'context': context, 'question': 'Give me step by step methods to gain muscle.', 'words': 50})
+
+print(response)

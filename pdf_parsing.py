@@ -80,3 +80,5 @@ print(len(encoding.encode(docs[0].page_content)))
 
 #how many tokens in our context
 print(len(encoding.encode(context)))
+
+### Your text tokens must be less than the model! 

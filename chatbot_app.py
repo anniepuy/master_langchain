@@ -30,7 +30,7 @@ st.write("This is a simple chatbot with history enabled. It uses the Ollama mode
 base_url = "http://localhost:11434"
 
 model = 'llama3.2'
-user_id = "user1"
+user_id = st.text_input("Enter your user ID", "ann")
 
 llm = ChatOllama(
     base_url=base_url,
@@ -53,6 +53,13 @@ if st.button("Start new conversation"):
     #clear history of mysql db
     history.clear()
 
+
+#display chat history
+for message in st.session_state.chat_history:
+    with st.chat_message(message['role']):
+        st.markdown(message['content'])
+
+
 #Base LLM SetUp
 system = SystemMessagePromptTemplate.from_template("You are a helpful assistant.")
 human = HumanMessagePromptTemplate.from_template("{input}")
@@ -63,3 +70,37 @@ prompt = ChatPromptTemplate.from_messages(messages)
 chain = prompt | llm | StrOutputParser()
 
 runnable_with_history = RunnableWithMessageHistory(chain, get_session_history, input_message_key='input', history_messages_key='history')
+
+#Method for chatting with LLM
+def chat_with_llm(session_id, input):
+    #non stream method
+    #output = runnable_with_history.invoke({'input': input}, config={'configurable': {'session_id': session_id}})
+    #return output
+
+    #stream method
+    for output in runnable_with_history.stream({'input': input}, config={'configurable': {'session_id': session_id}}):
+        yield output
+
+#input chat message box
+prompt = st.chat_input("Ask your question here")
+
+#if a user has entered a prompt, update the chat history
+if prompt:
+    st.session_state.chat_history.append({'role': 'user', 'content': prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    ##non stream response
+    #response = chat_with_llm(user_id, prompt)
+    
+    #with st.chat_message("assistant"):
+        #st.markdown(response)
+
+    #streamling response
+   
+    #writes the responseon the screen
+    with st.chat_message("assistant"):
+        response = st.write_stream(chat_with_llm(user_id, prompt))
+    ## add the response to the chat history
+    st.session_state.chat_history.append({'role': 'assistant', 'content': response})
+    

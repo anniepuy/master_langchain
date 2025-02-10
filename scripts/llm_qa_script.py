@@ -31,7 +31,7 @@ llm = ChatOllama(
 #Prepare system prompt and prompt template for QA
 system = SystemMessagePromptTemplate.from_template("""
                             You are a helpful AI assistant who answers user question based on provided content.
-                            Do not answer in more than {words} words.
+                            
                             """)    
 
 prompt = """ Answer user question based on the provided context only.  If you do not know the answer, just say "I don't know".

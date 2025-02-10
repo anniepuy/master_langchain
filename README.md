@@ -40,3 +40,16 @@ chat_memory.py
 ## Full LLM with Streamlit
 
 chatbot_app.py
+
+## PDF Parsing
+
+pdf_parsing.py
+
+## Using PDF Parsing in Chains with LLM
+
+pdf_summary.py
+rag_chat_qa.py
+
+## Creating structured Markdown Report
+
+generate_structured_report.py

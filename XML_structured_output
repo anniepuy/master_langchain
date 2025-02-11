@@ -1,6 +1,6 @@
 """
 Title: LangChain XML structured output
-Purpose: Learn how to load Microsoft XML data into the LLM and write a personalized job output
+Purpose: Learn how to load Microsoft XML data into the LLM and produce Markdown table
 Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 """
 
@@ -26,3 +26,4 @@ question = "Return this data where all where Gender is 'F' and format response a
 
 response = llm.ask_llm(context, question)
 print(response)
+

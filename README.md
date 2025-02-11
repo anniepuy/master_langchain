@@ -66,4 +66,5 @@ llm_qa_script.py
 ## Structured Outputs
 
 PPTX_data_loader.py - includes script output for speech
-XML_structured_output.py - Includes output for personalized email
+XML_structured_output.py - Includes output with Markdown
+personalized_email.phy - Doc uploader with personalized email output

@@ -87,4 +87,14 @@ for chunk in chunks:
 
 summary = "\n\n".join(chunk_summary)
 
-print(summary)
+#print(summary)
+
+#Combine reports for final report
+question2 = "Write a detailed news report from the given context."
+
+response = llm_qa_script.ask_llm(summary, question2)
+
+import os
+os.makedirs("reports", exist_ok=True)
+with open("reports/news_report.md", "w") as f:
+    f.write(response)

@@ -1,0 +1,28 @@
+"""
+Title: LangChain XML structured output
+Purpose: Learn how to load Microsoft XML data into the LLM and write a personalized job output
+Author: Ann Hagan - via learning through Laxmi Kant on Udemy
+"""
+
+from langchain_community.document_loaders import UnstructuredExcelLoader
+from scripts import llm
+
+#Element loading does one page at a time - adds a tabular data
+loader = UnstructuredExcelLoader("ms_data/sample.xlsx", mode='elements')
+
+docs = loader.load()
+#print(len(docs))
+doc = docs[0]
+#print(doc.metadata)
+
+doc.page_content
+#print(doc.page_content)
+
+#this allows the LLM ot understand the context of the XML data
+context = doc.metadata['text_as_html']
+#print(context)
+
+question = "Return this data where all where Gender is 'F' and format response as Markdown."
+
+response = llm.ask_llm(context, question)
+print(response)

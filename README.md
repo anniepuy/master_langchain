@@ -62,3 +62,8 @@ chunking_with_webscraping.py
 ## Single LLM script - standalone
 
 llm_qa_script.py
+
+## Structured Outputs
+
+PPTX_data_loader.py - includes script output for speech
+XML_structured_output.py - Includes output for personalized email

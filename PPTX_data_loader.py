@@ -37,3 +37,5 @@ For each PowerPoint slide provided above, write a 2-minute script from a that ef
 
 response = llm_qa_script.ask_llm(context, question)
 print(response)
+with open("ppt_script.md", "w") as f:
+    f.write(response)

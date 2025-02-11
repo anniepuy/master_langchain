@@ -90,7 +90,7 @@ summary = "\n\n".join(chunk_summary)
 #print(summary)
 
 #Combine reports for final report
-question2 = "Write a detailed news report from the given context."
+question2 = "Write a detailed news report using markdown from the given context. Think carefully about the content."
 
 response = llm_qa_script.ask_llm(summary, question2)
 

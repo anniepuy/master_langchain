@@ -6,7 +6,6 @@ Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 
 from langchain_community.document_loaders import YoutubeLoader
 from scripts import llm
-import yt_dlp
 
 #Youtube Link
 url = "https://www.youtube.com/watch?v=T_KZaJ744c4"

@@ -53,3 +53,12 @@ rag_chat_qa.py
 ## Creating structured Markdown Report
 
 generate_structured_report.py
+
+## Webscraping & Chunking
+
+webpage_loaders.py
+chunking_with_webscraping.py
+
+## Single LLM script - standalone
+
+llm_qa_script.py

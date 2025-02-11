@@ -83,4 +83,8 @@ for chunk in chunks:
     response = llm_qa_script.ask_llm(chunk, question)
     chunk_summary.append(response)
 
-print(chunk_summary)
+#print(chunk_summary)
+
+summary = "\n\n".join(chunk_summary)
+
+print(summary)

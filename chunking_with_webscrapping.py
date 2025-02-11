@@ -54,6 +54,33 @@ context = text_clean(context)
 
 
 ## using the imported LLM script
-response = llm_qa_script.ask_llm(context, question = "What is today's news?")
+#response = llm_qa_script.ask_llm(context, question = "What is today's news?")
+
+#print(response)
+
+#changing the output through chunking
+response = llm_qa_script.ask_llm(context[:10_000], question = "What is today's news?")
 
 print(response)
+
+#making a function for chunking with overlap
+def chunk_text(text, chunk_size, overlap=100):
+    chunks = []
+    for i in range(0, len(text), chunk_size - overlap):
+        yield text[i:i + chunk_size]
+    return chunks
+
+chunks = chunk_text(context, 10_000)
+
+#print(chunks)
+
+##Now we can pass indvidual chunks to the LLM model
+
+#Question
+question = "What is today's top stock market news?"
+chunk_summary = []
+for chunk in chunks:
+    response = llm_qa_script.ask_llm(chunk, question)
+    chunk_summary.append(response)
+
+print(chunk_summary)

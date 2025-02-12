@@ -72,3 +72,19 @@ personalized_email.phy - Doc uploader with personalized email output
 ## Load YouTube Video Transcript and Create SEO
 
 youtube_seo.py
+
+## Full RAG Scripts
+
+Filed under rag_with_vector folder
+
+# embedding set up with FAIS and nomi-embed-text:
+
+embedding_faiss_setup_standalone.py
+
+# Different searches using LangChain : simularity, MMR, simularity with threshold
+
+simularity_searches_with_faiss.py
+
+# final RAG pipeline with Runnables
+
+rag_with_ollama.py

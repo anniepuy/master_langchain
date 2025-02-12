@@ -88,3 +88,7 @@ simularity_searches_with_faiss.py
 # final RAG pipeline with Runnables
 
 rag_with_ollama.py
+
+## Tool calling for AI Agents
+
+Phi3 models do not support tool calling - Llama does

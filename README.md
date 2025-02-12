@@ -70,3 +70,5 @@ XML_structured_output.py - Includes output with Markdown
 personalized_email.phy - Doc uploader with personalized email output
 
 ## Load YouTube Video Transcript and Create SEO
+
+youtube_seo.py

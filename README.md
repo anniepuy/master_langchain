@@ -93,6 +93,10 @@ rag_with_ollama.py
 
 Phi3 models do not support tool calling - Llama does
 
-## Tavily
+## LangChain Tooling for AI Agents
 
-Searches the web for AI Tooling - free up to 1,000 requests
+Tavily- Searches the web for AI Tooling - free up to 1,000 requests
+
+using_langchain_search_tools.py
+create_custom_tools.py
+combine_all_search_tools_with_llm.py

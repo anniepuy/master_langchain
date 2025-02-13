@@ -68,3 +68,25 @@ from langchain import hub
 from langchain.agents import create_tool_calling_agent
 from langchain.agents import AgentExecutor
 
+prompt = hub.pull("hwchase17/openai-functions-agent")
+
+#view the prompt pulled from LangChain Hub
+print(prompt.messages)
+
+tools = [search, health_supplements]
+
+#no need to bind the tools to LLM, agent does this for you
+agent = create_tool_calling_agent(llm, tools, prompt)
+
+#executtion of the agent
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+#test teh agent
+#question = "What is the best supplement for muscle gain?"
+#question = "What is the best exercise type for muscle gain?"
+question = "What is the weather for New York?"
+response = agent_executor.invoke({'input': question})
+print(response)
+
+#print the output only
+print(response['output'])

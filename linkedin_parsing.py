@@ -140,3 +140,31 @@ for k, context in zip(section_keys, sections_text):
 import json
 with open('linkedin_data.json', 'w') as f:
     json.dump(responses, f, indent=4)
+
+## Passing the output of one LLM to the input of another LLM
+template2 = """
+You are provided with LinkedIn profile data in JSON format.
+Parse the data according to the specified schema, correct any spelling errors,
+and condense the information if possible.
+
+### LinkedIn Profile JSON Data:
+ {context}
+ 
+ ### Schema you need to follow:
+ You need to extract
+ Name:
+ Headline:
+ About:
+ Experience:
+ Education:
+ Skills:
+ Projects:
+ Summary:
+ 
+ Do not return preambles or any other information.
+ ### Parsed Data:"""
+
+prompt2 = template2.format(context=responses).replace("{", "{{").replace("{", "}}")
+response2 = ask_llm(prompt2)
+print(response2)
+

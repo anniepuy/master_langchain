@@ -63,3 +63,8 @@ def health_supplements(query: str) -> str:
 #print(health_supplements.invoke("What supplements help gain muscle mass?"))
 
 #Step 2: Define the Agent
+#the Agent Executor defines the action not the agent itself
+from langchain import hub
+from langchain.agents import create_tool_calling_agent
+from langchain.agents import AgentExecutor
+

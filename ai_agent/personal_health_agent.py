@@ -83,8 +83,8 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 #test teh agent
 #question = "What is the best supplement for muscle gain?"
-#question = "What is the best exercise type for muscle gain?"
-question = "What is the weather for New York?"
+question = "What is the best exercise type for muscle gain?"
+#question = "What is the weather for New York?"
 response = agent_executor.invoke({'input': question})
 print(response)
 

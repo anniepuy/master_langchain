@@ -67,3 +67,58 @@ def get_correct_sql_query(input):
     return response
 
 get_correct_sql_query.invoke({'context': response, 'question': question})
+
+db.run(response)
+
+##Final Query Chain
+from langchain_community.tools.sql_database.tool import QuerySQLDataBaseTool
+
+execute_query = QuerySQLDataBaseTool(db=db)
+sql_query = create_sql_query_chain(llm, db)
+
+final_chain = (
+    {'context': sql_query, 'question': RunnablePassthrough()}
+    | get_correct_sql_query
+    | execute_query
+)
+
+question = "how many employees are there?"
+response = final_chain.invoke(question)
+print(response)
+
+#3. Create Agent using LangGragh - tools prebuilt earlier are already in LangChain tooklits
+from langchain_community.agent_toolkits import SQLDatabaseToolkit
+
+toolkit = SQLDatabaseToolkit(db=db, llm=llm)
+
+tools = toolkit.get_tools()
+print(tools)
+
+#create the prompt
+from langchain_core.messages import SystemMessage
+
+SQL_PREFIX = """You are an agent designed to interact with a SQL database.
+given an input question, create a systactically correct SQLite query to run, then 
+look at the results of the query and return the answer.  Unless the user specifies a specific number
+of examples they wish to obtain, always limit your query to at most 5 results.  You can order the results by a relevant column to return the 
+most interesting examples in the database.  Never query for all the columns from a specific table, only ask for the relevent
+columns givent the question.  You have access to tools for interacting with the database.
+Only use the below tools. Only use the information returned by the below tools to construct your final answer.
+You MUST double check your query before executing it.  If you get an error while executing a query, rewrite the query and try agian.
+
+DO NOT make any DML statement (INSERT, UPDATE, DELETE, DROP, etc.) to the database.
+To start you shouold ALWAYS look at the tables in the database to see what you can query.
+Do NOT skip this step.
+Then you should query the schema of the most relevent tables."""
+
+system_message = SystemMessage(content=SQL_PREFIX)
+
+##Now create the agent from langgraph
+from langchain_core.messages import HumanMessage
+from langgraph.prebuilt import create_react_agent
+
+agent_executor = create_react_agent(llm, tools, state_modifier=system_message, debug=True)
+
+question = "how many employees are there?"
+response = agent_executor.invoke({'messages': [HumanMessage(content=question)]})
+print(response)

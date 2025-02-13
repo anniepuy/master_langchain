@@ -135,3 +135,8 @@ for k, context in zip(section_keys, sections_text):
     prompt = template.format(context, k)
     response = ask_llm(prompt)
     responses[k] = response
+
+#save as JSON
+import json
+with open('linkedin_data.json', 'w') as f:
+    json.dump(responses, f, indent=4)

@@ -46,3 +46,4 @@ chain  = prompt | llm | parser
 output = chain.invoke({'query': 'List the names of the planets in the solar system'})
 
 print(output)
+

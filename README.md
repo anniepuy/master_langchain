@@ -100,3 +100,19 @@ Tavily- Searches the web for AI Tooling - free up to 1,000 requests
 using_langchain_search_tools.py
 create_custom_tools.py
 combine_all_search_tools_with_llm.py
+
+## Binding tools to llm
+
+binding_tools_with_llm.py
+
+## Full AI Agent using Tavily Search & RAG
+
+ai_agent/personal_health_agent.py
+
+## Database - MySql with LangChain
+
+mysql_queries.py
+
+## Resume parsing with validating JSON format Passes twice to LLM
+
+resume_parsing_validation.py

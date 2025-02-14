@@ -1,6 +1,6 @@
 """
-Title: resume_parsing_streamlit.py
-Purpose: Resume Parsing with Streamlit
+Title: resume_parsing_validation.py
+Purpose: Resume Parsing with passing JSON format through LLM for validating format
 Author: Ann Hagan - via learning through Laxmi Kant on Udemy
 """
 from dotenv import load_dotenv
